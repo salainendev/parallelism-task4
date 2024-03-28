@@ -1,6 +1,7 @@
 import cv2
 import threading
 import time
+import argparse
 from queue import Queue
 import logging
 from typing import List
@@ -123,6 +124,11 @@ class ImageWindow():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="ширина,высота,фпс")
+    parser.add_argument("--height", type=int, default =480 )
+    parser.add_argument("--width", type=int, default = 720)
+    parser.add_argument("--fps", type=int, default=15)
+    args = parser.parse_args()
     if not os.path.exists('log'):
         os.makedirs('log')
     
@@ -133,9 +139,9 @@ if __name__ == "__main__":
     # создаём сенсоры (потоки начинают работу при инициализации) , камеру и окнонный обозреватель
     sensors = [SensorX(i) for i in [0.01,0.1,1]]
     queue = Queue()
-    sensor_cam = SensorCam(queue)
+    sensor_cam = SensorCam(queue,width = args.width,height = args.height)
     time.sleep(1)
-    window_imager = ImageWindow(fps=5)
+    window_imager = ImageWindow(fps = args.fps)
     while True:
         start_time = time.time()
         print("tryhard")
